@@ -1,0 +1,26 @@
+version: 1.0
+name: NoahAdrian
+main: de.schlauhund.main.Main
+load: STARTUP
+api-version: 1.13
+author: Schlauhund
+
+commands:
+   timer:
+      description:  
+   invsee:
+      description:
+   vanish:
+      description:
+   check:
+      description:
+   settings:
+      description:
+   heal:
+      description: 
+   pos:
+      description: 
+   reset:
+      description:
+   crash:
+      description:
