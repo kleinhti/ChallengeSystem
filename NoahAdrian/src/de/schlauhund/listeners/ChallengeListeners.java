@@ -19,6 +19,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import de.schlauhund.commands.Timer;
@@ -39,7 +40,7 @@ public class ChallengeListeners implements Listener {
 	@EventHandler
 	public void onSneak(PlayerMoveEvent e) {
 		if (c.getSneak() & e.getPlayer().isSneaking() & !e.getPlayer().isInsideVehicle() & !e.getPlayer().isSwimming()
-				& !e.getPlayer().isOnGround() & e.getPlayer().getGameMode() != GameMode.CREATIVE) {
+				& e.getPlayer().isOnGround() & isPlaying(e.getPlayer())) {
 			punishPlayer(e.getPlayer());
 		}
 	}
@@ -81,20 +82,28 @@ public class ChallengeListeners implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		for (int b = 8; b < 8 + c.getBlockedInventorySlots() + 1; b++) {
 			for (Player all : Bukkit.getOnlinePlayers()) {
-				all.getInventory().clear(b);
+				if (isPlaying(all))
+					all.getInventory().clear(b);
 			}
 			e.getPlayer().setMaxHealth(c.getHearts());
 			e.getPlayer().setHealthScale(c.getHearts());
 		}
+		e.setJoinMessage("§2[+] §e" + e.getPlayer().getName());
+	}
+
+	@EventHandler
+	public void onQuit(PlayerQuitEvent e) {
+		e.setQuitMessage("§c[-] §e" + e.getPlayer().getName());
 	}
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e) throws InterruptedException {
 		// m.setInventoryBlockers(c.getBlockedInventorySlots());
-		for (int i = 9; i < c.getBlockedInventorySlots() + 9; i++) {
-			e.getPlayer().getInventory().setItem(i, ic.createItem(Material.BARRIER, "§cSlot blockiert"));
-		}
+		if (isPlaying(e.getPlayer()))
+			for (int i = 9; i < c.getBlockedInventorySlots() + 9; i++) {
+				e.getPlayer().getInventory().setItem(i, ic.createItem(Material.BARRIER, "§cSlot blockiert"));
+			}
 		e.getPlayer().setMaxHealth(c.getHearts());
 		e.getPlayer().setHealthScale(c.getHearts());
 	}
@@ -136,5 +145,11 @@ public class ChallengeListeners implements Listener {
 			}
 
 		}, 1);
+	}
+
+	private Boolean isPlaying(Player p) {
+		if (p.getGameMode().equals(GameMode.SPECTATOR) | p.getGameMode().equals(GameMode.CREATIVE))
+			return false;
+		return true;
 	}
 }
