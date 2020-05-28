@@ -22,5 +22,3 @@ commands:
       description: 
    reset:
       description:
-   crash:
-      description:

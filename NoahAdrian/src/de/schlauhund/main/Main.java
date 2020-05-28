@@ -5,7 +5,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.schlauhund.commands.Check;
-import de.schlauhund.commands.Crash;
 import de.schlauhund.commands.Heal;
 import de.schlauhund.commands.Invsee;
 import de.schlauhund.commands.Position;
@@ -46,7 +45,6 @@ public class Main extends JavaPlugin {
 		getCommand("heal").setExecutor(new Heal());
 		getCommand("pos").setExecutor(new Position());
 		getCommand("reset").setExecutor(new de.schlauhund.commands.Reset());
-		getCommand("crash").setExecutor(new Crash());
 	}
 
 	private void registerListeners() {
