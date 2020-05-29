@@ -13,6 +13,7 @@ import de.schlauhund.commands.Vanish;
 import de.schlauhund.config.Config;
 import de.schlauhund.listeners.BedListener;
 import de.schlauhund.listeners.ChallengeListeners;
+import de.schlauhund.listeners.ChatFormat;
 import de.schlauhund.menu.Menu;
 import de.schlauhund.utils.Reset;
 
@@ -52,6 +53,7 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new Menu(), this);
 		pm.registerEvents(new ChallengeListeners(), this);
 		pm.registerEvents(new BedListener(), this);
+		pm.registerEvents(new ChatFormat(), this);
 	}
 
 	public static Main getPlugin() {

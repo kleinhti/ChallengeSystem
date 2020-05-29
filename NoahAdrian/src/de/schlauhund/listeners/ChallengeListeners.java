@@ -1,7 +1,9 @@
 package de.schlauhund.listeners;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -21,6 +23,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 
 import de.schlauhund.commands.Timer;
 import de.schlauhund.config.Config;
@@ -78,8 +81,10 @@ public class ChallengeListeners implements Listener {
 		}
 	}
 
+	@EventHandler
 	@SuppressWarnings("deprecation")
 	public void onJoin(PlayerJoinEvent e) {
+		e.setJoinMessage("§2[+] §e" + e.getPlayer().getName());
 		for (int b = 8; b < 8 + c.getBlockedInventorySlots() + 1; b++) {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				if (isPlaying(all))
@@ -88,7 +93,6 @@ public class ChallengeListeners implements Listener {
 			e.getPlayer().setMaxHealth(c.getHearts());
 			e.getPlayer().setHealthScale(c.getHearts());
 		}
-		e.setJoinMessage("§2[+] §e" + e.getPlayer().getName());
 	}
 
 	@EventHandler
@@ -125,6 +129,14 @@ public class ChallengeListeners implements Listener {
 			}
 		}
 //		respawn(e.getEntity());
+	}
+
+	@EventHandler
+	public void onPing(ServerListPingEvent e) {
+		long yourmilliseconds = System.currentTimeMillis();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		Date resultdate = new Date(yourmilliseconds);
+		e.setMotd("§aChallenge-Server\n" + "§e" + sdf.format(resultdate));
 	}
 
 	private void punishPlayer(Player p) {
