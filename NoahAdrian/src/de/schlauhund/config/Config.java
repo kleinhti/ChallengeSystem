@@ -20,6 +20,7 @@ public class Config {
 		return c.getInt("challenge.timer");
 	}
 
+	// Challenges
 	public double getHearts() {
 		return c.getDouble("challenge.hearts");
 	}
@@ -53,6 +54,10 @@ public class Config {
 		return loc;
 	}
 
+	public Boolean getResetonDeath() {
+		return c.getBoolean("challenges.resetondeath");
+	}
+
 	@SuppressWarnings("rawtypes")
 	public List getPositions() {
 		return c.getList("positions");
@@ -64,6 +69,12 @@ public class Config {
 
 	public Boolean getNoDrops() {
 		return c.getBoolean("challenges.nodrop");
+	}
+
+	// Einstellungen
+
+	public Boolean getdisablePvP() {
+		return c.getBoolean("settings.disablepvpv");
 	}
 
 	public void setTimer(int timeseconds) {
@@ -111,6 +122,16 @@ public class Config {
 		save();
 	}
 
+	public void setResetonDeath(Boolean on) {
+		c.set("challenges.resetondeath", on);
+		save();
+	}
+
+	public void setdisablePvP(Boolean on) {
+		c.set("settings.disablepvp", on);
+		save();
+	}
+
 	@SuppressWarnings("unchecked")
 	public void addPosition(String position, int x, int y, int z) {
 		c.set("position." + position + ".x", x);
@@ -125,16 +146,13 @@ public class Config {
 
 	@SuppressWarnings("unchecked")
 	public void setConfig() {
-		if (!c.contains("server.reset"))
-			c.set("server.reset", false);
+		contains("server.reset");
 		if (!c.contains("challenge.timer"))
 			c.set("challenge.timer", 0);
 		if (!c.contains("challenge.hearts"))
 			c.set("challenge.hearts", 10);
-		if (!c.contains("challenges.sneak"))
-			c.set("challenges.sneak", false);
-		if (!c.contains("challenges.damageall"))
-			c.set("challenges.damageall", false);
+		contains("challenges.sneak");
+		contains("challenges.damageall");
 		if (!c.contains("challenges.blockedinventoryslots"))
 			c.set("challenges.blockedinventoryslots", 0);
 		if (!c.contains("positions")) {
@@ -143,14 +161,18 @@ public class Config {
 			list.add("default");
 			c.set("positions", list);
 		}
-		if (!c.contains("challenges.noregeneration"))
-			c.set("challenges.noregeneration", false);
-		if (!c.contains("challenges.doubledamage"))
-			c.set("challenges.doubledamage", false);
-		if (c.contains("challenges.nodrop")) {
-			c.set("challenges.nodrop", false);
-		}
+		contains("challenges.noregeneration");
+		contains("challenges.doubledamage");
+		contains("challenges.nodrop");
+		contains("challenges.resetondeath");
+
+		contains("settings.disablepvp");
 		save();
+	}
+
+	public void contains(String path) {
+		if (!c.contains(path))
+			c.set(path, false);
 	}
 
 	private void save() {

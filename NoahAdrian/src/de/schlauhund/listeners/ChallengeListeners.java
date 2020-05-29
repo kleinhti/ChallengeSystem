@@ -14,6 +14,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -30,6 +31,7 @@ import de.schlauhund.config.Config;
 import de.schlauhund.main.Main;
 import de.schlauhund.menu.Menu;
 import de.schlauhund.utils.ItemCreator;
+import de.schlauhund.utils.Reset;
 import net.minecraft.server.v1_15_R1.PacketPlayInClientCommand;
 import net.minecraft.server.v1_15_R1.PacketPlayInClientCommand.EnumClientCommand;
 
@@ -63,6 +65,13 @@ public class ChallengeListeners implements Listener {
 			if (c.getDoubleDamage()) {
 				e.setDamage(e.getDamage() * 2);
 			}
+		}
+	}
+
+	@EventHandler
+	public void onDamagebyEntity(EntityDamageByEntityEvent e) {
+		if (e.getEntity() instanceof Player & e.getDamager() instanceof Player & c.getdisablePvP()) {
+			e.setCancelled(true);
 		}
 	}
 
@@ -127,6 +136,10 @@ public class ChallengeListeners implements Listener {
 				e.setDeathMessage(
 						"§e" + e.getEntity().getDisplayName() + " §awar zu langsam um dem Pfeil auszuweichen");
 			}
+		}
+		if (c.getResetonDeath()) {
+			Reset.resetWorld();
+			Bukkit.shutdown();
 		}
 //		respawn(e.getEntity());
 	}

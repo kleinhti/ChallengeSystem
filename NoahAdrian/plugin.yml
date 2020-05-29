@@ -22,3 +22,5 @@ commands:
       description: 
    reset:
       description:
+   ping:
+      description:

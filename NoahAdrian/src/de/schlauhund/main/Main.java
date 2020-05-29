@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import de.schlauhund.commands.Check;
 import de.schlauhund.commands.Heal;
 import de.schlauhund.commands.Invsee;
+import de.schlauhund.commands.Ping;
 import de.schlauhund.commands.Position;
 import de.schlauhund.commands.Timer;
 import de.schlauhund.commands.Vanish;
@@ -46,6 +47,7 @@ public class Main extends JavaPlugin {
 		getCommand("heal").setExecutor(new Heal());
 		getCommand("pos").setExecutor(new Position());
 		getCommand("reset").setExecutor(new de.schlauhund.commands.Reset());
+		getCommand("ping").setExecutor(new Ping());
 	}
 
 	private void registerListeners() {
