@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.schlauhund.challenges.MLGChallenge;
 import de.schlauhund.commands.Check;
 import de.schlauhund.commands.Heal;
 import de.schlauhund.commands.Invsee;
@@ -33,6 +34,8 @@ public class Main extends JavaPlugin {
 			Reset.resetWorld();
 			c.setReset(false);
 		}
+
+//		MLGChallenge.checkWorld();
 
 		registerCommands();
 		registerListeners();

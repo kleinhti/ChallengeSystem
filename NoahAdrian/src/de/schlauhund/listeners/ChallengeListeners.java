@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -25,12 +26,15 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.server.ServerListPingEvent;
+import org.bukkit.inventory.Inventory;
 
+import de.schlauhund.challenges.MLGChallenge;
 import de.schlauhund.commands.Timer;
 import de.schlauhund.config.Config;
 import de.schlauhund.main.Main;
 import de.schlauhund.menu.Menu;
 import de.schlauhund.utils.ItemCreator;
+import de.schlauhund.utils.PlayerListPing;
 import de.schlauhund.utils.Reset;
 import net.minecraft.server.v1_15_R1.PacketPlayInClientCommand;
 import net.minecraft.server.v1_15_R1.PacketPlayInClientCommand.EnumClientCommand;
@@ -43,11 +47,24 @@ public class ChallengeListeners implements Listener {
 
 	// No-Sneak Challenge
 	@EventHandler
-	public void onSneak(PlayerMoveEvent e) {
+	public void onSneak(PlayerMoveEvent e) throws InterruptedException {
 		if (c.getSneak() & e.getPlayer().isSneaking() & !e.getPlayer().isInsideVehicle() & !e.getPlayer().isSwimming()
 				& e.getPlayer().isOnGround() & isPlaying(e.getPlayer())) {
 			punishPlayer(e.getPlayer());
 		}
+//		if (e.getPlayer().getWorld().getName().equals("mlg") & e.getPlayer().isOnGround() & !e.getPlayer().isDead()
+//				& e.getPlayer().getLocation().getBlock().getType().equals(Material.WATER)) {
+//			e.getPlayer().getInventory().clear();
+//			e.getPlayer().setInvulnerable(true);
+//			e.getPlayer().teleport(MLGChallenge.location.get(e.getPlayer().getUniqueId()));
+//			MLGChallenge.location.remove(e.getPlayer().getUniqueId());
+//			e.getPlayer().setInvulnerable(false);
+//			Inventory inv = MLGChallenge.inventory.get(e.getPlayer().getUniqueId());
+//			for (int i = -106; i < 104; i++) {
+//				e.getPlayer().getInventory().setItem(i, inv.getItem(i));
+//			}
+//			MLGChallenge.inventory.remove(e.getPlayer().getUniqueId());
+//		}
 	}
 
 	// Damage-All Challenge
@@ -94,6 +111,7 @@ public class ChallengeListeners implements Listener {
 	@SuppressWarnings("deprecation")
 	public void onJoin(PlayerJoinEvent e) {
 		e.setJoinMessage("§2[+] §e" + e.getPlayer().getName());
+		PlayerListPing.startPingList(e.getPlayer());
 		for (int b = 8; b < 8 + c.getBlockedInventorySlots() + 1; b++) {
 			for (Player all : Bukkit.getOnlinePlayers()) {
 				if (isPlaying(all))

@@ -57,8 +57,9 @@ public class Menu implements CommandExecutor, Listener {
 				return;
 			case "§eEinstellungen":
 				e.setCancelled(true);
-
-				// Beginn der Challenges
+				e.getWhoClicked().openInventory(Settings());
+				return;
+			// Beginn der Challenges
 			case "§eNo-Sneak":
 				e.setCancelled(true);
 				if (c.getSneak()) {
@@ -133,6 +134,15 @@ public class Menu implements CommandExecutor, Listener {
 			// Beginn der Settings
 			case "§ePVP":
 				e.setCancelled(true);
+				if (c.getdisablePvP()) {
+					c.setdisablePvP(false);
+					Bukkit.broadcastMessage("§ePvP §2§laktiviert");
+				} else {
+					c.setdisablePvP(true);
+					Bukkit.broadcastMessage("§ePvP §2§ldeaktiviert");
+				}
+				close(e);
+				return;
 			}
 		} else if (e.getClickedInventory().getSize() == 6 * 9) {
 			for (double i = 0.5; i < 10.5; i = i + 0.5) {

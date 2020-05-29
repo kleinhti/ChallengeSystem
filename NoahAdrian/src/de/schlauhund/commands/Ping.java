@@ -6,6 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import de.schlauhund.challenges.MLGChallenge;
+
 public class Ping implements CommandExecutor {
 
 	@Override
@@ -16,6 +18,7 @@ public class Ping implements CommandExecutor {
 			if (args.length == 0) {
 				int ping = ((CraftPlayer) p).getHandle().ping;
 				p.sendMessage("§ePing: §2" + ping + " ms");
+//				MLGChallenge.startMLG(p);
 			}
 		}
 

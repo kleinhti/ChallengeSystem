@@ -74,7 +74,7 @@ public class Config {
 	// Einstellungen
 
 	public Boolean getdisablePvP() {
-		return c.getBoolean("settings.disablepvpv");
+		return c.getBoolean("settings.disablepvp");
 	}
 
 	public void setTimer(int timeseconds) {
