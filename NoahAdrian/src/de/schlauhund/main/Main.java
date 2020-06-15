@@ -4,12 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.schlauhund.challenges.MLGChallenge;
 import de.schlauhund.commands.Check;
+import de.schlauhund.commands.Fly;
+import de.schlauhund.commands.Force;
 import de.schlauhund.commands.Heal;
 import de.schlauhund.commands.Invsee;
 import de.schlauhund.commands.Ping;
 import de.schlauhund.commands.Position;
+import de.schlauhund.commands.Summon;
 import de.schlauhund.commands.Timer;
 import de.schlauhund.commands.Vanish;
 import de.schlauhund.config.Config;
@@ -51,6 +53,9 @@ public class Main extends JavaPlugin {
 		getCommand("pos").setExecutor(new Position());
 		getCommand("reset").setExecutor(new de.schlauhund.commands.Reset());
 		getCommand("ping").setExecutor(new Ping());
+		getCommand("fly").setExecutor(new Fly());
+		getCommand("summon").setExecutor(new Summon());
+		getCommand("force").setExecutor(new Force());
 	}
 
 	private void registerListeners() {

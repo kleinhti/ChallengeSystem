@@ -6,8 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import de.schlauhund.challenges.MLGChallenge;
-
 public class Ping implements CommandExecutor {
 
 	@Override

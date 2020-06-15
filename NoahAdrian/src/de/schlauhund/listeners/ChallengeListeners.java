@@ -3,32 +3,37 @@ package de.schlauhund.listeners;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import de.schlauhund.challenges.MLGChallenge;
 import de.schlauhund.commands.Timer;
 import de.schlauhund.config.Config;
 import de.schlauhund.main.Main;
@@ -36,6 +41,9 @@ import de.schlauhund.menu.Menu;
 import de.schlauhund.utils.ItemCreator;
 import de.schlauhund.utils.PlayerListPing;
 import de.schlauhund.utils.Reset;
+import de.schlauhund.utils.Targeter;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_15_R1.PacketPlayInClientCommand;
 import net.minecraft.server.v1_15_R1.PacketPlayInClientCommand.EnumClientCommand;
 
@@ -46,6 +54,7 @@ public class ChallengeListeners implements Listener {
 	Menu m = new Menu();
 
 	// No-Sneak Challenge
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onSneak(PlayerMoveEvent e) throws InterruptedException {
 		if (c.getSneak() & e.getPlayer().isSneaking() & !e.getPlayer().isInsideVehicle() & !e.getPlayer().isSwimming()
@@ -65,10 +74,19 @@ public class ChallengeListeners implements Listener {
 //			}
 //			MLGChallenge.inventory.remove(e.getPlayer().getUniqueId());
 //		}
+
+		// Herzenanzeige
+		if (!e.getPlayer().getNearbyEntities(5, 2, 5).isEmpty()) {
+			Entity entity = Targeter.getTargetEntity(e.getPlayer());
+			if (entity != null)
+				e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR,
+						TextComponent.fromLegacyText("Â§cÂ§l" + ((LivingEntity) entity).getHealth() / 2 + "/"
+								+ ((LivingEntity) entity).getMaxHealth() / 2 + "â™¥"));
+		}
 	}
 
 	// Damage-All Challenge
-	// TODO:Die anderen dürfen keinen Schaden bekommen, wenn der Spieler blockt
+	// TODO:Die anderen dÃ¼rfen keinen Schaden bekommen, wenn der Spieler blockt
 	@EventHandler
 	public void onDamage(EntityDamageEvent e) {
 		if (e.getEntityType().equals(EntityType.PLAYER) & !e.getCause().equals(DamageCause.CUSTOM)) {
@@ -100,7 +118,7 @@ public class ChallengeListeners implements Listener {
 			DateTimeFormatter dt = DateTimeFormatter.ofPattern("HH:mm:ss");
 			t.stopTimer();
 			Bukkit.broadcastMessage(
-					"§2Der EnderDragon wurde besiegt. Die Challenge wurde nach §e" + lt.format(dt) + "§2 beendet.");
+					"Â§2Der EnderDragon wurde besiegt. Die Challenge wurde nach Â§e" + lt.format(dt) + "Â§2 beendet.");
 		}
 		if (c.getNoDrops() & !e.getEntityType().equals(EntityType.PLAYER)) {
 			e.getDrops().clear();
@@ -110,21 +128,23 @@ public class ChallengeListeners implements Listener {
 	@EventHandler
 	@SuppressWarnings("deprecation")
 	public void onJoin(PlayerJoinEvent e) {
-		e.setJoinMessage("§2[+] §e" + e.getPlayer().getName());
+		e.setJoinMessage("Â§2[+] Â§e" + e.getPlayer().getName());
 		PlayerListPing.startPingList(e.getPlayer());
-		for (int b = 8; b < 8 + c.getBlockedInventorySlots() + 1; b++) {
-			for (Player all : Bukkit.getOnlinePlayers()) {
-				if (isPlaying(all))
-					all.getInventory().clear(b);
+		if (c.getBlockedInventorySlots() != 0) {
+			for (int b = 8; b < 8 + c.getBlockedInventorySlots() + 1; b++) {
+				for (Player all : Bukkit.getOnlinePlayers()) {
+					if (isPlaying(all))
+						all.getInventory().clear(b);
+				}
+				e.getPlayer().setMaxHealth(c.getHearts());
+				e.getPlayer().setHealthScale(c.getHearts());
 			}
-			e.getPlayer().setMaxHealth(c.getHearts());
-			e.getPlayer().setHealthScale(c.getHearts());
 		}
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
-		e.setQuitMessage("§c[-] §e" + e.getPlayer().getName());
+		e.setQuitMessage("Â§c[-] Â§e" + e.getPlayer().getName());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -133,7 +153,7 @@ public class ChallengeListeners implements Listener {
 		// m.setInventoryBlockers(c.getBlockedInventorySlots());
 		if (isPlaying(e.getPlayer()))
 			for (int i = 9; i < c.getBlockedInventorySlots() + 9; i++) {
-				e.getPlayer().getInventory().setItem(i, ic.createItem(Material.BARRIER, "§cSlot blockiert"));
+				e.getPlayer().getInventory().setItem(i, ic.createItem(Material.BARRIER, "Â§cSlot blockiert"));
 			}
 		e.getPlayer().setMaxHealth(c.getHearts());
 		e.getPlayer().setHealthScale(c.getHearts());
@@ -152,7 +172,7 @@ public class ChallengeListeners implements Listener {
 		if (e.getEntityType().equals(EntityType.PLAYER)) {
 			if (e.getEntity().getLastDamageCause().equals(DamageCause.PROJECTILE)) {
 				e.setDeathMessage(
-						"§e" + e.getEntity().getDisplayName() + " §awar zu langsam um dem Pfeil auszuweichen");
+						"Â§e" + e.getEntity().getDisplayName() + " Â§awar zu langsam um dem Pfeil auszuweichen");
 			}
 		}
 		if (c.getResetonDeath()) {
@@ -167,7 +187,35 @@ public class ChallengeListeners implements Listener {
 		long yourmilliseconds = System.currentTimeMillis();
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		Date resultdate = new Date(yourmilliseconds);
-		e.setMotd("§aChallenge-Server\n" + "§e" + sdf.format(resultdate));
+		e.setMotd("Â§aChallenge-Server\n" + "Â§e" + sdf.format(resultdate));
+	}
+
+	@EventHandler
+	public void onDestroy(BlockBreakEvent e) {
+		e.setDropItems(false);
+		List<Material> blocks = new ArrayList<Material>();
+		for (Material block : Material.values()) {
+			if (block.isBlock()) {
+				blocks.add(block);
+			}
+		}
+		Material block = blocks.get(new Random().nextInt(blocks.size()));
+		if (block.isItem())
+			e.getPlayer().getWorld().dropItem(e.getBlock().getLocation(), new ItemStack(block));
+	}
+
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void onTarget(EntityTargetLivingEntityEvent e) {
+		e.getEntity().sendMessage("t");
+		if (e.getEntityType().equals(EntityType.PLAYER)) {
+			Player p = (Player) e.getEntity();
+			if (e.getTarget() instanceof LivingEntity) {
+				p.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+						TextComponent.fromLegacyText("Â§c" + ((LivingEntity) e.getTarget()).getHealth() + "/"
+								+ ((LivingEntity) e.getTarget()).getMaxHealth()));
+			}
+		}
 	}
 
 	private void punishPlayer(Player p) {

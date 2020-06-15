@@ -24,3 +24,9 @@ commands:
       description:
    ping:
       description:
+   fly:
+      description:
+   summon:
+      description:
+   force:
+      description:
