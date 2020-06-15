@@ -43,7 +43,7 @@ public class Menu implements CommandExecutor, Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onClick(InventoryClickEvent e) throws EventException {
-		if (e.getClickedInventory().getSize() == 3 * 9) {
+		if (check(e, "§eMenü") | check(e, "§eChallenges") | check(e, "§eEinstellungen")) {
 
 			switch (e.getCurrentItem().getItemMeta().getDisplayName()) {
 
@@ -144,7 +144,7 @@ public class Menu implements CommandExecutor, Listener {
 				close(e);
 				return;
 			}
-		} else if (e.getClickedInventory().getSize() == 6 * 9) {
+		} else if (check(e, "§eHerzen")) {
 			for (double i = 0.5; i < 10.5; i = i + 0.5) {
 				if (e.getCurrentItem().getItemMeta().getDisplayName().equals("§c" + i + " Herzen")) {
 					for (Player all : Bukkit.getOnlinePlayers()) {
@@ -160,7 +160,7 @@ public class Menu implements CommandExecutor, Listener {
 					return;
 				}
 			}
-		} else if (e.getClickedInventory().getSize() == 4 * 9) {
+		} else if (check(e, "§eBegrenzte Inventar Slots")) {
 			for (int i = 0; i < 28; i++) {
 				if (e.getCurrentItem().getItemMeta().getDisplayName().equals("§2" + i + "§e Slots blockiert")) {
 					for (int b = 8; b < 8 + c.getBlockedInventorySlots() + 1; b++) {
@@ -224,6 +224,11 @@ public class Menu implements CommandExecutor, Listener {
 				all.getInventory().setItem(i, ic.createItem(Material.BARRIER, "§cSlot blockiert"));
 			}
 		}
+	}
+
+	// Funktion zum Prüfen des Inventorys
+	private Boolean check(InventoryClickEvent e, String title) {
+		return e.getView().getTitle().equals(title);
 	}
 
 	// Funktion zum Schließen des Inventars
