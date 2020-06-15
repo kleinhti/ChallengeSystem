@@ -6,9 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
 
 public class Force implements CommandExecutor, Listener {
 
@@ -47,15 +45,5 @@ public class Force implements CommandExecutor, Listener {
 			}
 		}
 		return false;
-	}
-
-	@EventHandler
-	public void onMove(PlayerMoveEvent e) {
-		if (victim != null && victim.equals(e.getPlayer())) {
-			e.setCancelled(true);
-		}
-		if (player != null && player.equals(e.getPlayer())) {
-			victim.teleport(e.getPlayer().getLocation());
-		}
 	}
 }

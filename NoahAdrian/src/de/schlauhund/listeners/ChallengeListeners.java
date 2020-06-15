@@ -29,6 +29,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 
+import de.schlauhund.commands.Force;
 import de.schlauhund.commands.Timer;
 import de.schlauhund.config.Config;
 import de.schlauhund.main.Main;
@@ -51,7 +52,7 @@ public class ChallengeListeners implements Listener {
 	// No-Sneak Challenge
 	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void onSneak(PlayerMoveEvent e) throws InterruptedException {
+	public void onMove(PlayerMoveEvent e) throws InterruptedException {
 		if (c.getSneak() & e.getPlayer().isSneaking() & !e.getPlayer().isInsideVehicle() & !e.getPlayer().isSwimming()
 				& e.getPlayer().isOnGround() & isPlaying(e.getPlayer())) {
 			punishPlayer(e.getPlayer());
@@ -77,6 +78,14 @@ public class ChallengeListeners implements Listener {
 				e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR,
 						TextComponent.fromLegacyText("§c§l" + ((LivingEntity) entity).getHealth() / 2 + "/"
 								+ ((LivingEntity) entity).getMaxHealth() / 2 + "♥"));
+		}
+
+		// Control
+		if (Force.victim != null && Force.victim.equals(e.getPlayer())) {
+			e.setCancelled(true);
+		}
+		if (Force.player != null && Force.player.equals(e.getPlayer())) {
+			Force.victim.teleport(e.getPlayer().getLocation());
 		}
 	}
 
