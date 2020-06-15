@@ -3,11 +3,7 @@ package de.schlauhund.listeners;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -32,7 +28,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-import org.bukkit.inventory.ItemStack;
 
 import de.schlauhund.commands.Timer;
 import de.schlauhund.config.Config;
@@ -192,16 +187,16 @@ public class ChallengeListeners implements Listener {
 
 	@EventHandler
 	public void onDestroy(BlockBreakEvent e) {
-		e.setDropItems(false);
-		List<Material> blocks = new ArrayList<Material>();
-		for (Material block : Material.values()) {
-			if (block.isBlock()) {
-				blocks.add(block);
-			}
-		}
-		Material block = blocks.get(new Random().nextInt(blocks.size()));
-		if (block.isItem())
-			e.getPlayer().getWorld().dropItem(e.getBlock().getLocation(), new ItemStack(block));
+//		e.setDropItems(false);
+//		List<Material> blocks = new ArrayList<Material>();
+//		for (Material block : Material.values()) {
+//			if (block.isBlock()) {
+//				blocks.add(block);
+//			}
+//		}
+//		Material block = blocks.get(new Random().nextInt(blocks.size()));
+//		if (block.isItem())
+//			e.getPlayer().getWorld().dropItem(e.getBlock().getLocation(), new ItemStack(block));
 	}
 
 	@SuppressWarnings("deprecation")

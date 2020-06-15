@@ -64,6 +64,7 @@ public class Main extends JavaPlugin {
 		pm.registerEvents(new ChallengeListeners(), this);
 		pm.registerEvents(new BedListener(), this);
 		pm.registerEvents(new ChatFormat(), this);
+		pm.registerEvents(new Force(), this);
 	}
 
 	public static Main getPlugin() {
